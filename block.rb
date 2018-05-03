@@ -46,7 +46,7 @@
 
  		trans = {
  				"sender" => sender,
- 				"recv"   => receiver
+ 				"recv"   => receiver,
  				"amount" => amount
  				}
  		@transaction << trans

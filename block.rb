@@ -1,5 +1,7 @@
  require 'digest'
  require 'securerandom'
+ require 'httparty'
+ require 'json'
 
  class BlockHeader
 
@@ -21,6 +23,7 @@
  		@chain = []
  		@transaction = []
  		@wallet = {}
+ 		@node = []
  	end
 
  	def make_a_wallet
@@ -34,6 +37,7 @@
  	end
 
  	def make_a_trans(sender, receiver, amount)
+
  		if 		@wallet[sender].nil?
  				"보내는 주소가 잘못되었습니다."
  		elsif 	@wallet[reciever].nil?
@@ -60,6 +64,7 @@
         		nonce  = rand(1000000)
 				hashed = Digest::SHA256.hexdigest(nonce.to_s)
 		end while hashed[0..3] != "0000"
+
 		block = {
 				"nHeight" 			=> @chain.size,
 				"nTime"	  			=> Time.now.to_i,
@@ -69,7 +74,7 @@
 				}		         		
 		@transaction =[]
 		@chain << block
-		end
+		
 	end
 	
 	def last_block
@@ -79,5 +84,28 @@
 	def all_chains
 		@chain
 	end
-end
+
+	def ask_block
+		@node.each do |n|
+			n_block = HTTParty.get("http://localhost:" + n + "/number_of_blocks").body
+
+			if @chain.length < n_block.to_i
+				json_chain = @chain.to_json
+				full_chain = HTTParty.get("http://localhost:" + n + "/recv_chain?chain=" + json_chain)
+				@chain = JSON.parse(full_chain)
+			end
+		end		
+	end
+
+	def add_block(block)
+		block.each do |b|
+			@chain << b
+		end
+		@chain.to_json
+	end
+	
+	def all_node
+		@node
+	end
+end				
 

@@ -10,13 +10,13 @@ blockchain = Blockchain.new
 get '/' do 
 	message = "<center>"
 
-	blockchain.all_blocks.each do |eachBlock|
-		message << "BlockHeight		   : " + eachBlock['nHeight'].to_s + "<br>"
-		message << "Time		   : " + eachBlock['nTime'].to_s + "<br>"
-		message << "Nonce		   : " + eachBlock['nNonce'].to_s + "<br>"
-		message << "Previous_BlockHash 	   : " + eachBlock['previous_address'].to_s + "<br>"
-		message << "Cur_BlockHash	   : " + Digest::SHA256.hexdigest(eachBlock.to_s) + "<br>"
-		message << "Cur_Transation	   : " + eachBlock['Transaction'].to_s + "<br>"
+	blockchain.all_chains.each do |b|
+		message << "BlockHeight		   : " + b['nHeight'].to_s + "<br>"
+		message << "Time		   : " + b['nTime'].to_s + "<br>"
+		message << "Nonce		   : " + b['nNonce'].to_s + "<br>"
+		message << "Previous_BlockHash 	   : " + b['previous_address'].to_s + "<br>"
+		message << "Cur_BlockHash	   : " + Digest::SHA256.hexdigest(b.to_s) + "<br>"
+		message << "Cur_Transation	   : " + b['Transaction'].to_s + "<br>"
 		message << "<hr>"
 	end
 
@@ -33,7 +33,7 @@ get '/trans' do
 end
 
 get '/new_wallet' do 
-    blockchain.make_a_new_wallet.to_s	
+    blockchain.make_a_wallet.to_s	
 end
 
 get '/all_wallet' do

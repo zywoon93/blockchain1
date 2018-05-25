@@ -3,20 +3,6 @@
  require 'httparty'
  require 'json'
 
- class BlockHeader
-
- 	def initialize
- 		@time
- 		@prevBlockHash
- 		@nonce
- 		@height
- 	end
-
- 	def prevBlockInfo
- 	end
-
- end
-
  class Blockchain
 
  	def initialize
@@ -64,24 +50,23 @@
         		nonce  = rand(1000000)
 				hashed = Digest::SHA256.hexdigest(nonce.to_s)
 		end while hashed[0..3] != "0000"
+		nonce
 
+		last_block = @chain[-1]
+		
 		block = {
-				"nHeight" 			=> @chain.size,
-				"nTime"	  			=> Time.now.to_i,
-				"nNonce"  			=> nonce,
+				"index" 			=> @chain.size + 1,
+				"Time"	  			=> Time.now.to_i,
+				"nonce"  			=> nonce,
 				"previous_address" 	=> Digest::SHA256.hexdigest(last_block.to_s),
-				"Transaction"		=> @transaction 
+				"transaction"		=> @transaction 
 				}		         		
 		@transaction =[]
 		@chain << block
 		
 	end
-	
-	def last_block
-		@chain[-1]
-	end
 
-	def all_chains
+	def all_blocks
 		@chain
 	end
 

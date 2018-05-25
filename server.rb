@@ -3,20 +3,20 @@
 require 'sinatra'
 require './block'
 
-set :port, 4568
+set :bind, '0.0.0.0'
 
 blockchain = Blockchain.new
 
 get '/' do 
 	message = "<center>"
 
-	blockchain.all_chains.each do |b|
-		message << "BlockHeight		   : " + b['nHeight'].to_s + "<br>"
-		message << "Time		   : " + b['nTime'].to_s + "<br>"
-		message << "Nonce		   : " + b['nNonce'].to_s + "<br>"
-		message << "Previous_BlockHash 	   : " + b['previous_address'].to_s + "<br>"
-		message << "Cur_BlockHash	   : " + Digest::SHA256.hexdigest(b.to_s) + "<br>"
-		message << "Cur_Transation	   : " + b['Transaction'].to_s + "<br>"
+	blockchain.all_blocks.each do |b|
+		message << "Number	   		: " + b['index'].to_s + "<br>"
+		message << "Time		   	: " + b['Time'].to_s + "<br>"
+		message << "Nonce		   	: " + b['nonce'].to_s + "<br>"
+		message << "Previous_Address: " + b['previous_address'].to_s + "<br>"
+		message << "My-Address	  	: " + Digest::SHA256.hexdigest(b.to_s) + "<br>"
+		message << "Transations	    : " + b['transaction'].to_s + "<br>"
 		message << "<hr>"
 	end
 
